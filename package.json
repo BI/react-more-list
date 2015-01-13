@@ -1,0 +1,18 @@
+{
+  "name": "react-more-list",
+  "version": "1.0.0",
+  "description": "Expandable list component using React and Webpack",
+  "main": "bundle.js",
+  "dependencies": {
+    "jsx-loader": "^0.12.2",
+    "css-loader": "^0.9.0",
+    "style-loader": "^0.8.2"
+  },
+  "keywords": [
+    "react",
+    "webpack",
+    "list",
+    "expandable",
+    "jsx"
+  ]
+}
