@@ -1,7 +1,7 @@
 react-more-list
 ===============
 
-A list control that gives you the ability to to limit the ammount of items shown. The more list should have only list items (i.e. `<li>`) as its children.
+A list control that gives you the ability to to limit the ammount of items shown. The more list should have only list items (i.e. `<li>`) as its children. For an example, see [this demo](http://yeahbuthats.github.io/react-more-list/).
 
 To do initial setup, open a command window in the directory and run the following:
 
