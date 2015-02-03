@@ -1,4 +1,4 @@
-var React = require("react");
+var React = require("react/addons");
 
 /************* Helper Functions **************/
 function isElementType(element, expectedType) {
@@ -35,8 +35,14 @@ var MoreList = React.createClass({
   getInitialState: function() {
     return { itemsShown: this.props.initialSize };
   },
-  increaseItemsShown: function(increment) {
+  increaseItemsShown: function(event, increment) {
     this.setState({itemsShown: this.state.itemsShown + increment});
+
+    //supposedly React wraps the event, but it doesn't seem to be happening
+    //so we need both of these here.
+    event.stopPropagation();
+    event.preventDefault();
+    return false;
   },
   propTypes: {
     initialSize: React.PropTypes.number,
@@ -66,7 +72,7 @@ var MoreList = React.createClass({
     if(this.props.moreSize === 0)
     {
       var count = this.props.showCount ? <span className="ml-count ml-more-count">{remaining}</span> : null;
-      return (<li className="ml-list-item ml-expander ml-more" onClick={this.increaseItemsShown.bind(this, remaining)}>More... {count}</li>);  
+      return (<li className="ml-list-item ml-expander ml-more" onMouseDown={this.increaseItemsShown.bind(this, event, remaining)}>More... {count}</li>);
     }
 
     var toAdd = remaining <= this.props.moreSize ? remaining : this.props.moreSize;
@@ -75,7 +81,7 @@ var MoreList = React.createClass({
     displayedCount += remaining > displayedCount ? "+" : "";
     
     var count = this.props.showCount ? <span className="ml-count ml-more-count">{displayedCount}</span> : null;
-    return (<li className="ml-list-item ml-expander ml-more" onClick={this.increaseItemsShown.bind(this, toAdd)}>More... {count}</li>);
+    return (<li className="ml-list-item ml-expander ml-more" onMouseDown={this.increaseItemsShown.bind(this, event, toAdd)}>More... {count}</li>);
   },
   addShowAllComponent: function() {
     if(!this.props.allowShowAll || this.props.moreSize == 0) {
@@ -91,21 +97,27 @@ var MoreList = React.createClass({
     var remaining = children.length - this.state.itemsShown;
     
     var count = this.props.showCount ? <span className="ml-count ml-show-all-count">{remaining}</span> : null;
-    return (<li className="ml-list-item ml-expander ml-show-all" onClick={this.increaseItemsShown.bind(this, remaining)}>Show All... {count}</li>);
+    return (<li className="ml-list-item ml-expander ml-show-all" onMouseDown={this.increaseItemsShown.bind(this, event, remaining)}>Show All... {count}</li>);
   },
   render: function()
   {
     var children = this.props.children;
 
     if(children.constructor !== Array) {
-      children = [children];
+    children = [children];
     }
 
     var shownItemCount = this.state.itemsShown;
     shownItemCount += shownItemCount + this.props.tolerance >= children.length ? this.props.tolerance : 0;
 
     var listItems = children.slice(0, shownItemCount).map(function (child) {
-      return <li className="ml-list-item ml-data">{child.props.children}</li>;
+      var className = "ml-list-item ml-data"
+
+      if(child.props.className) {
+        className = className + " " + child.props.className;
+      }
+
+      return React.addons.cloneWithProps(child, { className: className})
     });
 
     listItems.push(this.addMoreComponent());
