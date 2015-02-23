@@ -1,3 +1,4 @@
+var React = require('react/addons');
 var MoreList = require("./more-list.jsx");
 require("./more-list-styles.css");
 
