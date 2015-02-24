@@ -35,14 +35,19 @@ var MoreList = React.createClass({
   getInitialState: function() {
     return { itemsShown: this.props.initialSize };
   },
-  increaseItemsShown: function(event, increment) {
-    this.setState({itemsShown: this.state.itemsShown + increment});
+  handleMouseDown: function(increment) {
+    console.log("handleMouseDown")
+
+    this.increaseItemsShown(increment);
 
     //supposedly React wraps the event, but it doesn't seem to be happening
     //so we need both of these here.
     event.stopPropagation();
     event.preventDefault();
     return false;
+  },
+  increaseItemsShown: function(increment) {
+    this.setState({itemsShown: this.state.itemsShown + increment});
   },
   propTypes: {
     initialSize: React.PropTypes.number,
@@ -60,6 +65,9 @@ var MoreList = React.createClass({
       showCount: true
     };
   },
+  generateMessage: function(increment) {
+
+  },
   addMoreComponent: function() {
     var children = this.props.children;
 
@@ -68,11 +76,11 @@ var MoreList = React.createClass({
     }
 
     var remaining = children.length - this.state.itemsShown;
+    var message = "Click to show all " + remaining + " remaining items";
 
-    if(this.props.moreSize === 0)
-    {
+    if(this.props.moreSize === 0) {
       var count = this.props.showCount ? <span className="ml-count ml-more-count">{remaining}</span> : null;
-      return (<li className="ml-list-item ml-expander ml-more" onMouseDown={this.increaseItemsShown.bind(this, event, remaining)}>More... {count}</li>);
+      return (<li aria-label={message} role="button" className="ml-list-item ml-expander ml-more" onMouseDown={this.increaseItemsShown.bind(this, remaining)}>More... {count}</li>);
     }
 
     var toAdd = remaining <= this.props.moreSize ? remaining : this.props.moreSize;
@@ -81,7 +89,12 @@ var MoreList = React.createClass({
     displayedCount += remaining > displayedCount ? "+" : "";
     
     var count = this.props.showCount ? <span className="ml-count ml-more-count">{displayedCount}</span> : null;
-    return (<li className="ml-list-item ml-expander ml-more" onMouseDown={this.increaseItemsShown.bind(this, event, toAdd)}>More... {count}</li>);
+    
+    if(toAdd + this.props.tolerance < remaining) {
+      message = "Click to show " + toAdd + " more items";
+    }
+
+    return (<li aria-label={message} role="button" className="ml-list-item ml-expander ml-more" onMouseDown={this.increaseItemsShown.bind(this, toAdd)}>More... {count}</li>);
   },
   addShowAllComponent: function() {
     if(!this.props.allowShowAll || this.props.moreSize == 0) {
@@ -95,9 +108,10 @@ var MoreList = React.createClass({
     }
 
     var remaining = children.length - this.state.itemsShown;
+    var message = "Click to show all " + remaining + " remaining items";
     
     var count = this.props.showCount ? <span className="ml-count ml-show-all-count">{remaining}</span> : null;
-    return (<li className="ml-list-item ml-expander ml-show-all" onMouseDown={this.increaseItemsShown.bind(this, event, remaining)}>Show All... {count}</li>);
+    return (<li aria-label={message} role="button" className="ml-list-item ml-expander ml-show-all" onMouseDown={this.increaseItemsShown.bind(this, remaining)}>Show All... {count}</li>);
   },
   render: function()
   {
