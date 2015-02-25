@@ -2,7 +2,7 @@
   "name": "react-more-list",
   "version": "1.0.1",
   "description": "Expandable list component using React and Webpack",
-  "main": "bundle.js",
+  "main": "more-list.jsx",
   "dependencies": {
     "jsx-loader": "^0.12.2",
     "css-loader": "^0.9.0",
