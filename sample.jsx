@@ -3,7 +3,7 @@ var MoreList = require("./more-list.jsx");
 require("./more-list-styles.css");
 
 React.render(
-  <MoreList>
+  <MoreList id="fruits">
     <li>Apple</li>
     <li>Banana</li>
     <li>Coconut</li>

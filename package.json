@@ -1,11 +1,12 @@
 {
   "name": "react-more-list",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Expandable list component using React and Webpack",
-  "main": "bundle.js",
+  "main": "more-list.jsx",
   "dependencies": {
-    "jsx-loader": "^0.12.2",
     "css-loader": "^0.9.0",
+    "jsx-loader": "^0.12.2",
+    "react": "^0.13.1",
     "style-loader": "^0.8.2"
   },
   "keywords": [
@@ -14,5 +15,18 @@
     "list",
     "expandable",
     "jsx"
-  ]
+  ],
+  "devDependencies": {
+    "jest-cli": "^0.4.0",
+    "react-tools": "^0.13.1"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/preprocessor.js",
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/react"
+    ]
+  }
 }

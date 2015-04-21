@@ -65,9 +65,6 @@ var MoreList = React.createClass({
       showCount: true
     };
   },
-  generateMessage: function(increment) {
-
-  },
   addMoreComponent: function() {
     var children = this.props.children;
 
@@ -80,7 +77,7 @@ var MoreList = React.createClass({
 
     if(this.props.moreSize === 0) {
       var count = this.props.showCount ? <span className="ml-count ml-more-count">{remaining}</span> : null;
-      return (<li aria-label={message} role="button" className="ml-list-item ml-expander ml-more" onMouseDown={this.increaseItemsShown.bind(this, remaining)}>More... {count}</li>);
+      return (<li aria-label={message} aria-controls={this.props.id} role="button" className="ml-list-item ml-expander ml-more" onMouseDown={this.increaseItemsShown.bind(this, remaining)}>More... {count}</li>);
     }
 
     var toAdd = remaining <= this.props.moreSize ? remaining : this.props.moreSize;
@@ -94,7 +91,7 @@ var MoreList = React.createClass({
       message = "Click to show " + toAdd + " more items";
     }
 
-    return (<li aria-label={message} role="button" className="ml-list-item ml-expander ml-more" onMouseDown={this.increaseItemsShown.bind(this, toAdd)}>More... {count}</li>);
+    return (<li aria-label={message} aria-controls={this.props.id} role="button" className="ml-list-item ml-expander ml-more" onMouseDown={this.increaseItemsShown.bind(this, toAdd)}>More... {count}</li>);
   },
   addShowAllComponent: function() {
     if(!this.props.allowShowAll || this.props.moreSize == 0) {
@@ -111,7 +108,7 @@ var MoreList = React.createClass({
     var message = "Click to show all " + remaining + " remaining items";
     
     var count = this.props.showCount ? <span className="ml-count ml-show-all-count">{remaining}</span> : null;
-    return (<li aria-label={message} role="button" className="ml-list-item ml-expander ml-show-all" onMouseDown={this.increaseItemsShown.bind(this, remaining)}>Show All... {count}</li>);
+    return (<li aria-label={message} aria-controls={this.props.id} role="button" className="ml-list-item ml-expander ml-show-all" onMouseDown={this.increaseItemsShown.bind(this, remaining)}>Show All... {count}</li>);
   },
   render: function()
   {
@@ -124,21 +121,21 @@ var MoreList = React.createClass({
     var shownItemCount = this.state.itemsShown;
     shownItemCount += shownItemCount + this.props.tolerance >= children.length ? this.props.tolerance : 0;
 
-    var listItems = children.slice(0, shownItemCount).map(function (child) {
+    var listItems = children.slice(0, shownItemCount).map(function (child, id) {
       var className = "ml-list-item ml-data"
 
       if(child.props.className) {
         className = className + " " + child.props.className;
       }
 
-      return React.addons.cloneWithProps(child, { className: className})
+      return React.addons.cloneWithProps(child, { className: className, ref: "li" + id})
     });
 
     listItems.push(this.addMoreComponent());
     listItems.push(this.addShowAllComponent());
 
     return (
-      <ul className="ml-list">
+      <ul aria-live="assertive" className="ml-list">
         {listItems}
       </ul>
     )
